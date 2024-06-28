@@ -9,29 +9,76 @@ import Faq from "./Components/Faq.jsx";
 import Compare from "./Components/Compare.jsx";
 import Footer from "./Components/Footer.jsx";
 import Team from "./Components/Team.jsx";
-import Conatct from "./Components/Contact.jsx";
+import Contact from "./Components/Contact.jsx";
 import Annonces from "./Components/Prestataire/Annonces.jsx";
 import Favorites from "./Components/Prestataire/Favorites.jsx";
 import Login from "./Components/Auth/Login.jsx";
+import Dashboard from './Components/Admin/Dashboard.jsx';
+import PrivateRoute from './Components/PrivateRoute.jsx'; 
+
 function App() {
     return (
             <div>
+                 <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="Login" element={<Login />} />
 
+                {/* Admin routes */}
+                <Route path="Dashboard" element={
+                    <PrivateRoute roles={['admin']}>
+                        <Dashboard />
+                    </PrivateRoute>
+                }/>
 
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="NavBar" element={<NavBar/>}/>
-                    <Route path="QuiSommesNous" element={<QuiSommesNous/>}/>
-                    <Route path="Blog" element={<Blog/>}/>
-                    <Route path="Faq" element={<Faq/>}/>
-                    <Route path="Compare" element={<Compare/>}/>
-                    <Route path="Footer" element={<Footer/>}/>
-                    <Route path="Team" element={<Team/>}/>
-                    <Route path="contact" element={<Conatct/>}/>
-                    <Route path="Annonces" element={<Annonces/>}/>
-                    <Route path="Favorites" element={<Favorites/>}/>
-                    <Route path="Login" element={<Login/>}/>
-                </Routes>
+                {/* Prestataire routes */}
+                <Route path="Annonces" element={
+                    <PrivateRoute roles={['prestataire']}>
+                        <Annonces />
+                    </PrivateRoute>
+                }/>
+                <Route path="Favorites" element={
+                    <PrivateRoute roles={['prestataire']}>
+                        <Favorites />
+                    </PrivateRoute>
+                }/>
+
+                {/* Client routes */}
+                <Route path="Home" element={
+                    <PrivateRoute roles={['client']}>
+                        <Home />
+                    </PrivateRoute>
+                }/>
+                <Route path="Blog" element={
+                    <PrivateRoute roles={['client']}>
+                        <Blog />
+                    </PrivateRoute>
+                }/>
+                <Route path="Faq" element={
+                    <PrivateRoute roles={['client']}>
+                        <Faq />
+                    </PrivateRoute>
+                }/>
+                <Route path="Compare" element={
+                    <PrivateRoute roles={['client']}>
+                        <Compare />
+                    </PrivateRoute>
+                }/>
+                <Route path="Team" element={
+                    <PrivateRoute roles={['client']}>
+                        <Team />
+                    </PrivateRoute>
+                }/>
+                 <Route path="Contact" element={
+                    <PrivateRoute roles={['client']}>
+                        <Contact />
+                    </PrivateRoute>
+                }/>
+                  <Route path="QuiSommesNous" element={
+                    <PrivateRoute roles={['client']}>
+                        <QuiSommesNous />
+                    </PrivateRoute>
+                }/>
+            </Routes>
             </div>
     );
 }
