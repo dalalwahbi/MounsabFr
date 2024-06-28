@@ -13,8 +13,10 @@ import Contact from "./Components/Contact.jsx";
 import Annonces from "./Components/Prestataire/Annonces.jsx";
 import Favorites from "./Components/Prestataire/Favorites.jsx";
 import Login from "./Components/Auth/Login.jsx";
+import ClientRegister from "./Components/Auth/ClientRegister.jsx";
+import PrestataireRegister from "./Components/Auth/PrestataireRegister.jsx";
 import Dashboard from './Components/Admin/Dashboard.jsx';
-import PrivateRoute from './Components/PrivateRoute.jsx'; 
+import PrivateRoute from './Components/PrivateRoute.jsx';
 
 function App() {
     return (
@@ -22,6 +24,9 @@ function App() {
                  <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="Login" element={<Login />} />
+                <Route path="ClientRegister" element={<ClientRegister />} />
+                <Route path="PrestataireRegister" element={<PrestataireRegister />} />
+
 
                 {/* Admin routes */}
                 <Route path="Dashboard" element={

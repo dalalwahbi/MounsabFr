@@ -1,8 +1,53 @@
-import React from 'react';
+import { useState } from 'react';
 import NavBar from "./NavBar.jsx";
 import Footer from "./Footer.jsx";
 import backgroundQuiSommesNous from "../assets/QuiSommeNous1.jpg";
+import { useNavigate } from 'react-router-dom';
 const Contact = () => {
+
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/Login');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/reclamation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ message })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'An error occurred');
+            }
+
+            const data = await response.json();
+            console.log('Reclamation created successfully:', data);
+            setMessage('');
+            setError('');
+        } catch (error) {
+            if (error.message === 'Only clients can create reclamations.') {
+                localStorage.removeItem('token');
+                localStorage.removeItem('Role');
+                navigate('/Login');
+            } else {
+                setError(error.message || 'Network Error');
+            }
+        }
+    };
+
     return (
         <div>
             <nav>
@@ -61,61 +106,21 @@ const Contact = () => {
                         </div>
                     </div>
                     <div className="bg-white rounded-lg w-[60%] mt-20 shadow-2xl">
-                        <div className="w-[85%] mx-auto py-10 ">
+                        <div className="w-[85%] mx-auto py-16 ">
                             <h1 className="text-3xl font-serif font-medium text-center">Send a Message</h1>
+                            {error && <div className="text-red-500 text-center">{error}</div>}
 
-                            <div className="relative flex  items-center text-black py-3">
-                                <span className="absolute">
-                                    <svg className="w-7 h-7 mx-3 text-gray-900 bg-gray-400 py-1 rounded-md"
-                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-width="2"
-                                              d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                                    </svg>
-                                </span>
-                                <input type="text" placeholder="Name *"
-                                       className="block w-full py-4 text-black font-serif text-lg placeholder-black bg-white border border-gray-200 rounded-md pl-11 pr-5 rtl:pr-11 rtl:pl-5  dark:border-gray-400 focus:border-gray-500 dark:focus:border-gray-500 focus:ring-gray-500 focus:outline-none focus:ring focus:ring-opacity-40"/>
-                            </div>
-                            <div className="flex justify-between">
-
-                                <div className="relative flex  items-center text-black py-3 w-[48%]">
-                                    <span className="absolute">
-                                        <svg className="w-7 h-7 mx-3 text-gray-900 bg-gray-400 py-1 rounded-md"
-                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                                             height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-width="2"
-                                                  d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                                        </svg>
-                                    </span>
-                                    <input type="text" placeholder="Name *"
-                                           className="block w-full py-4 text-black font-serif text-lg placeholder-black bg-white border border-gray-200 rounded-md pl-11 pr-5 rtl:pr-11 rtl:pl-5  dark:border-gray-400 focus:border-gray-500 dark:focus:border-gray-500 focus:ring-gray-500 focus:outline-none focus:ring focus:ring-opacity-40"/>
+                            <form onSubmit={handleSubmit}>
+                                <div className="py-8">
+                                    <textarea
+                                        className="border-2 border-gray-400 py-5 px-5 placeholder:text-black placeholder:font-serif placeholder:text-lg  placeholder:py-4 "
+                                        placeholder="Message *" name="message" id="message" cols="47" rows="6" value={message} onChange={(e) => setMessage(e.target.value)} required></textarea>
                                 </div>
 
-                                <div className="relative flex  items-center text-black py-3 w-[48%]">
-                                    <span className="absolute">
-                                        <svg className="w-7 h-7 mx-3 text-gray-900 bg-gray-400 py-1 rounded-md"
-                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                                             height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-width="2"
-                                                  d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                                        </svg>
-                                    </span>
-                                    <input type="text" placeholder="Name *"
-                                           className="block w-full py-4 text-black font-serif text-lg placeholder-black bg-white border border-gray-200 rounded-md pl-11 pr-5 rtl:pr-11 rtl:pl-5  dark:border-gray-400 focus:border-gray-500 dark:focus:border-gray-500 focus:ring-gray-500 focus:outline-none focus:ring focus:ring-opacity-40"/>
+                                <div className="bg-yellow-600 w-[40%] py-2 mx-auto text-center cursor-pointer rounded">
+                                    <button type="submit" className="text-white font-serif font-bold  text-lg text-center">Se connecter</button>
                                 </div>
-
-                            </div>
-                            <div className="py-3">
-                                <textarea
-                                    className="border-2 border-gray-400 placeholder:text-black placeholder:font-serif placeholder:text-lg placeholder:px-10 placeholder:py-10 "
-                                    placeholder="Message *" name="" id="" cols="49" rows="7"></textarea>
-                            </div>
-
-                            <div className="bg-yellow-600 w-[40%] py-2 mx-auto text-center cursor-pointer rounded">
-                                <button className="text-white font-serif font-bold  text-lg text-center">Se connecter</button>
-                            </div>
-
-
+                            </form>
                         </div>
                     </div>
                 </div>
