@@ -5,6 +5,7 @@ import backgroundQuiSommesNous from "../../assets/QuiSommeNous1.jpg";
 import facebook from "../../assets/facebook.png";
 import google from "../../assets/google.png";
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -129,10 +130,9 @@ const Login = () => {
 
                                     <div className="flex justify-between mb-6">
                                         <div className="flex gap-2">
-                                            <input type="checkbox" />
-                                            <h1 className="font-serif font-medium text-black text-lg">Souvenez-vous de moi</h1>
+                                            <Link to="/ClientRegister" className="font-serif font-medium text-black text-lg hover:underline cursor:pointer">Créer un nouveau compte</Link>
                                         </div>
-                                        <h1 className="font-serif font-medium text-yellow-500 text-lg">Mot de passe oublié ?</h1>
+                                        <h1 className="font-serif font-medium text-yellow-500 text-lg cursor-pointer hover:underline">Mot de passe oublié ?</h1>
                                     </div>
 
                                     {error && <p className="text-red-500 mb-4">{error}</p>}
