@@ -17,6 +17,8 @@ import ClientRegister from "./Components/Auth/ClientRegister.jsx";
 import PrestataireRegister from "./Components/Auth/PrestataireRegister.jsx";
 import Dashboard from './Components/Admin/Dashboard.jsx';
 import PrivateRoute from './Components/PrivateRoute.jsx';
+import Clients from './Components/Admin/Clients.jsx';
+import Prestataires from './Components/Admin/Prestataires.jsx';
 
 function App() {
     return (
@@ -32,6 +34,16 @@ function App() {
                 <Route path="Dashboard" element={
                     <PrivateRoute roles={['admin']}>
                         <Dashboard />
+                    </PrivateRoute>
+                }/>
+                <Route path="Clients" element={
+                    <PrivateRoute roles={['admin']}>
+                        <Clients />
+                    </PrivateRoute>
+                }/>
+                <Route path="Prestataires" element={
+                    <PrivateRoute roles={['admin']}>
+                        <Prestataires />
                     </PrivateRoute>
                 }/>
 
