@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from '/src/assets//logo.png'
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
 
 const Prestataires = () => {
@@ -122,7 +123,7 @@ const Prestataires = () => {
                     <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 <div class="flex text-center items-center mt-2 gap-2">
-                    <h1 class="text-3xl text-white font-bold font-mono">Users</h1>
+                    <h1 class="text-3xl text-white font-bold font-mono">Prestataires</h1>
                     <h1 class="text-sm text-gray-300 mt-2">135</h1>
                 </div>
 
@@ -142,10 +143,10 @@ const Prestataires = () => {
             {prestataires.map((prestataire) => (
                             <tr className="text-white" key={prestataire.id}>
                                 <td className="text-white font-medium font-serif">{prestataire.id}</td>
-                                <td className="text-white font-medium font-serif">{prestataire.fullName}</td>
-                                <td className="text-white font-medium font-serif">{prestataire.email}</td>
-                                <td className="text-white font-medium font-serif">{prestataire.phone}</td>
-                                <td className="text-white font-medium font-serif">{prestataire.createdAt}</td>
+                                <td className="text-white font-medium font-serif">{prestataire.user.firstName} {prestataire.user.lastName}</td>
+                                <td className="text-white font-medium font-serif">{prestataire.user.email}</td>
+                                <td className="text-white font-medium font-serif">{prestataire.user.phone}</td>
+                                <td className="text-white font-medium font-serif">{format(new Date(prestataire.user.created_at), 'dd MMMM yyyy')}</td>
                                 <td>
                                     <button className="text-white bg-red-600 font-medium font-serif px-5 py-1 rounded">BAN</button>
                                 </td>

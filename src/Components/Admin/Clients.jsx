@@ -1,10 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '/src/assets//logo.png'
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
 
 
 const Clients = () => {
+
+    const [clients, setClients] = useState([]);
+
+
+    useEffect(() => {
+        fetchAllClients();
+    }, []);
+
+    const fetchAllClients = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+
+            const response = await fetch('http://127.0.0.1:8000/api/getAllClients', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setClients(data);
+            } else {
+                console.error('Failed to fetch Prestataires:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching Prestataires:', error);
+        }
+    }
+
+
     return (
         <div class="flex">
         <aside className="flex flex-col w-[320px] h-screen overflow-x-hidden overflow-y-auto  -r rtl:-r-0 rtl:-l  dark:bg-black">
@@ -88,7 +124,7 @@ const Clients = () => {
                             <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <div class="flex text-center items-center mt-2 gap-2">
-                            <h1 class="text-3xl text-white font-bold font-mono">Users</h1>
+                            <h1 class="text-3xl text-white font-bold font-mono">Clients</h1>
                             <h1 class="text-sm text-gray-300 mt-2">135</h1>
                         </div>
         
@@ -105,14 +141,18 @@ const Clients = () => {
                         <th class="py-6">ACTION</th>
                     </thead>
                     <tbody class="text-white text-md text-center">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td> 
-                            <button className="text-white bg-red-600 font-medium font-serif  px-5 py-1 rounded">BAN</button>
-                        </td>
+                    {clients.map((client) => (
+                            <tr className="text-white" key={client.id}>
+                                <td className="text-white font-medium font-serif">{client.id}</td>
+                                <td className="text-white font-medium font-serif">{client.user.firstName} {client.user.lastName}</td>
+                                <td className="text-white font-medium font-serif">{client.user.email}</td>
+                                <td className="text-white font-medium font-serif">{client.user.phone}</td>
+                                <td className="text-white font-medium font-serif">{format(new Date(client.user.created_at), 'dd MMMM yyyy')}</td>
+                                <td>
+                                    <button className="text-white bg-red-600 font-medium font-serif px-5 py-1 rounded">BAN</button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
         
         
