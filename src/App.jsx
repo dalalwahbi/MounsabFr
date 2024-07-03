@@ -19,6 +19,11 @@ import Dashboard from './Components/Admin/Dashboard.jsx';
 import PrivateRoute from './Components/PrivateRoute.jsx';
 import Clients from './Components/Admin/Clients.jsx';
 import Prestataires from './Components/Admin/Prestataires.jsx';
+import Posts from './Components/Admin/Posts.jsx';
+import Reclamations from './Components/Admin/Reclamations.jsx';
+import AnnounceForm from "./Components/Prestataire/AnnounceForm.jsx";
+import AnnounceForm2 from "./Components/Prestataire/AnnounceForm2.jsx";
+import AnnounceForm3 from "./Components/Prestataire/AnnounceForm3.jsx";
 
 function App() {
     return (
@@ -46,6 +51,16 @@ function App() {
                         <Prestataires />
                     </PrivateRoute>
                 }/>
+                 <Route path="Reclamations" element={
+                    <PrivateRoute roles={['admin']}>
+                        <Reclamations />
+                    </PrivateRoute>
+                }/>
+                 <Route path="Posts" element={
+                    <PrivateRoute roles={['admin']}>
+                        <Posts />
+                    </PrivateRoute>
+                }/>
 
                 {/* Prestataire routes */}
                 <Route path="Annonces" element={
@@ -56,6 +71,21 @@ function App() {
                 <Route path="Favorites" element={
                     <PrivateRoute roles={['prestataire']}>
                         <Favorites />
+                    </PrivateRoute>
+                }/>
+                <Route path="AnnounceForm" element={
+                    <PrivateRoute roles={['prestataire']}>
+                        <AnnounceForm />
+                    </PrivateRoute>
+                }/>
+                <Route path="AnnounceForm2" element={
+                    <PrivateRoute roles={['prestataire']}>
+                        <AnnounceForm2 />
+                    </PrivateRoute>
+                }/>
+                <Route path="AnnounceForm3" element={
+                    <PrivateRoute roles={['prestataire']}>
+                        <AnnounceForm3 />
                     </PrivateRoute>
                 }/>
 

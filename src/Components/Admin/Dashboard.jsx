@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '/src/assets//logo.png'
+import logo from '/src/assets//logo.png';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
@@ -304,23 +304,24 @@ const Dashboard = () => {
                                     </Link>
         
                                     <Link to="/Clients" className="flex items-center px-4 py-2 mt-5 text-gray-300 hover:text-yellow-600 transition-colors duration-300 transform rounded-lg " href="Annonces">
-                                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M19 11H5M19 11C20.1046 11 21 11.8954 21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13C3 11.8954 3.89543 11 5 11M19 11V9C19 7.89543 18.1046 7 17 7M5 11V9C5 7.89543 5.89543 7 7 7M7 7V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V7M7 7H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
         
                                         <span className="mx-4 font-medium">Clients</span>
                                     </Link>
         
-                                    <Link className="flex items-center px-4 py-2 mt-5 text-gray-300 hover:text-yellow-600 transition-colors duration-300 transform rounded-lg " href="Reclamations">
-                                        <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Zm0 0-4 4m5 0H4m1 0 4-4m1 4 4-4m-4 7v6l4-3-4-3Z" />
+                                    <Link to="/Reclamations" className="flex items-center px-4 py-2 mt-5 text-gray-300 hover:text-yellow-600 transition-colors duration-300 transform rounded-lg " href="Reclamations">
+                                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 11H5M19 11C20.1046 11 21 11.8954 21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13C3 11.8954 3.89543 11 5 11M19 11V9C19 7.89543 18.1046 7 17 7M5 11V9C5 7.89543 5.89543 7 7 7M7 7V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V7M7 7H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
         
         
                                         <span className="mx-4 font-medium">Reclamations</span>
                                     </Link>
         
-                                    <Link className="flex items-center px-4 py-2 mt-5 text-gray-300 hover:text-yellow-600 transition-colors duration-300 transform rounded-lg " href="Clients">
+                                    <Link to="/Posts" className="flex items-center px-4 py-2 mt-5 text-gray-300 hover:text-yellow-600 transition-colors duration-300 transform rounded-lg " href="Clients">
                                         <svg className="w-5 h-5 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z" />
                                         </svg>
@@ -423,7 +424,7 @@ const Dashboard = () => {
                                     </thead>
 
 
-                                    <tbody id="latest-Prestataires" className="text-md text-white font-serif">
+                                    <tbody id="latest-Prestataires" className="text-md text-white font-serif ">
                                     {latestPrestataires.map((prestataire) => (
                                             <tr key={prestataire.id}>
                                                 <td className="py-2">{prestataire.id}</td>
@@ -451,20 +452,20 @@ const Dashboard = () => {
                             </div>
                             <div className="w-full h-[1px] bg-white"></div>
 
-                            <div className="py-4">
-                                <table className="w-full text-center">
+                            <div className="py-5">
+                                <table className="w-full text-center ">
                                     <thead className="text-yellow-600 text-sm">
-                                        <th>ID</th>
+                                        <th className="">ID</th>
                                         <th>CLIENT</th>
                                         <th>DATE</th>
                                     </thead>
 
-                                    <tbody id="latest-Reclamations" className="text-md text-white font-serif">
+                                    <tbody className="text-md text-white font-serif ">
                                     {latestReclamations.map((reclamation) => (
                                             <tr key={reclamation.id}>
-                                                <td className="py-2">{reclamation.id}</td>
-                                                <td>{`${reclamation.user.firstName} ${reclamation.user.lastName}`}</td>
-                                                <td>{format(new Date(reclamation.created_at), 'dd MMMM yyyy')}</td>
+                                                <td className="pt-[16px]">{reclamation.id}</td>
+                                                <td className="pt-[16px]">{`${reclamation.user.firstName} ${reclamation.user.lastName}`}</td>
+                                                <td className="pt-[16px]">{format(new Date(reclamation.created_at), 'dd MMMM yyyy')}</td>
                                             </tr>
                                         ))}
                                     </tbody>

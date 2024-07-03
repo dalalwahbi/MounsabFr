@@ -179,7 +179,7 @@ const NavBar = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div
+                                <Link to="/AnnounceForm"
                                     className="gi-header-action self-center max-[575px]:w-full max-[575px]:py-[10px] max-[575px]:bg-[#4b5966] w-[400px]">
                                     <div
                                         className="text-white bg-yellow-600 py-3.5 px-8 rounded-md font-serif font-medium ">
@@ -194,7 +194,7 @@ const NavBar = () => {
 
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         </div>
                     </div>
