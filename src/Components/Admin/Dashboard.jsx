@@ -4,269 +4,145 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
 
-
 const Dashboard = () => {
-
     const [latestPrestataires, setLatestPrestataires] = useState([]);
-
-    useEffect(() => {
-        fetchLatestPrestataires();
-    }, []);
-
-    const fetchLatestPrestataires = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
-
-            const response = await fetch('http://127.0.0.1:8000/api/getLatestPrestataires', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setLatestPrestataires(data);
-            } else {
-                console.error('Failed to fetch latest Prestataires:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error fetching latest Prestataires:', error);
-        }
-    };
-
-
     const [latestClients, setLatestClients] = useState([]);
-
-    useEffect(() => {
-        fetchLatestClients();
-    }, []);
-
-    const fetchLatestClients = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
-
-            const response = await fetch('http://127.0.0.1:8000/api/getLatestClients', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setLatestClients(data);
-            } else {
-                console.error('Failed to fetch latest Clients:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error fetching latest Clients:', error);
-        }
-    };
-
     const [latestAnnonces, setLatestAnnonces] = useState([]);
-
-    useEffect(() => {
-        fetchLatestAnnonces();
-    }, []);
-
-    const fetchLatestAnnonces = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
-
-            const response = await fetch('http://127.0.0.1:8000/api/getLatestAnnonces', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setLatestAnnonces(data);
-            } else {
-                console.error('Failed to fetch latest Annonces:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error fetching latest Annonces:', error);
-        }
-    };
-
-
     const [latestReclamations, setLatestReclamations] = useState([]);
 
+    const [prestatairesCount, setPrestatairesCount] = useState(0);
+    const [clientsCount, setClientsCount] = useState(0);
+    const [annoncesCount, setAnnoncesCount] = useState(0);
+    const [reclamationsCount, setReclamationsCount] = useState(0);
+
     useEffect(() => {
-        fetchLatestReclamations();
+        fetchCounts();
+        fetchLatestData();
     }, []);
 
-    const fetchLatestReclamations = async () => {
+    const fetchCounts = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
+                throw new Error('JWT token not found in local storage');
             }
 
-            const response = await fetch('http://127.0.0.1:8000/api/getLatestReclamations', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const [prestatairesResponse, clientsResponse, annoncesResponse, reclamationsResponse] = await Promise.all([
+                fetch('http://127.0.0.1:8000/api/countPrestataires', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch('http://127.0.0.1:8000/api/countClients', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch('http://127.0.0.1:8000/api/countAnnonces', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch('http://127.0.0.1:8000/api/countReclamations', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+            ]);
 
-            if (response.ok) {
-                const data = await response.json();
-                setLatestReclamations(data);
-            } else {
-                console.error('Failed to fetch latest Annonces:', response.statusText);
+            if (!prestatairesResponse.ok) {
+                throw new Error(`Failed to fetch Prestataires count: ${prestatairesResponse.statusText}`);
             }
+            if (!clientsResponse.ok) {
+                throw new Error(`Failed to fetch Clients count: ${clientsResponse.statusText}`);
+            }
+            if (!annoncesResponse.ok) {
+                throw new Error(`Failed to fetch Annonces count: ${annoncesResponse.statusText}`);
+            }
+            if (!reclamationsResponse.ok) {
+                throw new Error(`Failed to fetch Reclamations count: ${reclamationsResponse.statusText}`);
+            }
+
+            const prestatairesData = await prestatairesResponse.json();
+            const clientsData = await clientsResponse.json();
+            const annoncesData = await annoncesResponse.json();
+            const reclamationsData = await reclamationsResponse.json();
+
+            setPrestatairesCount(prestatairesData.count);
+            setClientsCount(clientsData.count);
+            setAnnoncesCount(annoncesData.count);
+            setReclamationsCount(reclamationsData.count);
         } catch (error) {
-            console.error('Error fetching latest Annonces:', error);
+            console.error('Error fetching counts:', error);
+            // Handle error (e.g., show error message)
         }
     };
-    
-    const [prestatairesCount, setPrestatairesCount] = useState(0);
 
-    useEffect(() => {
-        fetchPrestatairesCount();
-    }, []);
-
-    const fetchPrestatairesCount = () => {
+    const fetchLatestData = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
+                throw new Error('JWT token not found in local storage');
             }
 
-        fetch('http://127.0.0.1:8000/api/countPrestataires', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setPrestatairesCount(data.count); 
-        })
-        .catch(error => console.error('Error fetching prestataires count:', error));
-    }catch (error) {
-        console.error('Error count Prestataires:', error);
-    }
-    };
+            const [prestatairesResponse, clientsResponse, annoncesResponse, reclamationsResponse] = await Promise.all([
+                fetch('http://127.0.0.1:8000/api/getLatestPrestataires', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch('http://127.0.0.1:8000/api/getLatestClients', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch('http://127.0.0.1:8000/api/getLatestAnnonces', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch('http://127.0.0.1:8000/api/getLatestReclamations', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+            ]);
 
-    const [ClientsCount, setClientsCount] = useState(0);
-
-    useEffect(() => {
-        fetchClientsCount();
-    }, []);
-
-    const fetchClientsCount = () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
+            if (!prestatairesResponse.ok) {
+                throw new Error(`Failed to fetch latest Prestataires data: ${prestatairesResponse.statusText}`);
+            }
+            if (!clientsResponse.ok) {
+                throw new Error(`Failed to fetch latest Clients data: ${clientsResponse.statusText}`);
+            }
+            if (!annoncesResponse.ok) {
+                throw new Error(`Failed to fetch latest Annonces data: ${annoncesResponse.statusText}`);
+            }
+            if (!reclamationsResponse.ok) {
+                throw new Error(`Failed to fetch latest Reclamations data: ${reclamationsResponse.statusText}`);
             }
 
-        fetch('http://127.0.0.1:8000/api/countClients', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setClientsCount(data.count); 
-        })
-        .catch(error => console.error('Error fetching Clients count:', error));
-    }catch (error) {
-        console.error('Error count Clients:', error);
-    }
+            const prestatairesData = await prestatairesResponse.json();
+            const clientsData = await clientsResponse.json();
+            const annoncesData = await annoncesResponse.json();
+            const reclamationsData = await reclamationsResponse.json();
+
+            setLatestPrestataires(prestatairesData);
+            setLatestClients(clientsData);
+            setLatestAnnonces(annoncesData);
+            setLatestReclamations(reclamationsData);
+        } catch (error) {
+            console.error('Error fetching latest data:', error);
+            // Handle error (e.g., show error message)
+        }
     };
-
-    const [AnnoncesCount, setAnnoncesCount] = useState(0);
-
-    useEffect(() => {
-        fetchAnnoncesCount();
-    }, []);
-
-    const fetchAnnoncesCount = () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
-
-        fetch('http://127.0.0.1:8000/api/countAnnonces', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setAnnoncesCount(data.count); 
-        })
-        .catch(error => console.error('Error fetching Annonces count:', error));
-    }catch (error) {
-        console.error('Error count Annonces:', error);
-    }
-    };
-
-
-    const [ReclamationsCount, setReclamationsCount] = useState(0);
-
-    useEffect(() => {
-        fetchReclamationsCount();
-    }, []);
-
-    const fetchReclamationsCount = () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
-
-        fetch('http://127.0.0.1:8000/api/countReclamations', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setReclamationsCount(data.count); 
-        })
-        .catch(error => console.error('Error fetching Reclamations count:', error));
-    }catch (error) {
-        console.error('Error count Reclamations:', error);
-    }
-    };
-
-
  
     return (
         <div className="flex">
@@ -369,7 +245,7 @@ const Dashboard = () => {
                             <div className="p-4">
                                 <h1 className="text-yellow-600 text-2xl font-medium font-serif">Clients</h1>
                                 <div className="flex justify-between mt-2 px-2">
-                                    <h1 id="cinema-count" className="text-white font-medium text-2xl">{ClientsCount}</h1>
+                                    <h1 id="cinema-count" className="text-white font-medium text-2xl">{clientsCount}</h1>
                                     <svg className="w-8 h-8 text-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
@@ -380,7 +256,7 @@ const Dashboard = () => {
                             <div className="p-4">
                                 <h1 className="text-yellow-600 text-2xl font-medium font-serif">Annonces</h1>
                                 <div className="flex justify-between mt-2 px-2">
-                                    <h1 id="category-count" className="text-white font-medium text-2xl">{AnnoncesCount}</h1>
+                                    <h1 id="category-count" className="text-white font-medium text-2xl">{annoncesCount}</h1>
                                     <svg className="w-8 h-8 text-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v5m-3 0h6M4 11h16M5 15h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1Z" />
                                     </svg>
@@ -391,7 +267,7 @@ const Dashboard = () => {
                             <div className="p-4">
                                 <h1 className="text-yellow-600 text-2xl font-medium font-serif">Reclamations</h1>
                                 <div className="flex justify-between mt-2 px-2">
-                                    <h1 id="movie-count" className="text-white font-medium text-2xl">{ReclamationsCount}</h1>
+                                    <h1 id="movie-count" className="text-white font-medium text-2xl">{reclamationsCount}</h1>
                                     <svg className="w-8 h-8 text-yellow-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M19 11H5M19 11C20.1046 11 21 11.8954 21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13C3 11.8954 3.89543 11 5 11M19 11V9C19 7.89543 18.1046 7 17 7M5 11V9C5 7.89543 5.89543 7 7 7M7 7V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V7M7 7H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>

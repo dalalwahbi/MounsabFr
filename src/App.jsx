@@ -2,6 +2,7 @@ import './App.css';
 import {Routes, Route } from "react-router-dom";
 import React from "react";
 import Home from "./Components/Home.jsx";
+import AllAnnounces from "./Components/AllAnnounces.jsx";
 import NavBar from "./Components/NavBar.jsx";
 import QuiSommesNous from "./Components/QuiSommesNous.jsx";
 import Blog from "./Components/Blog.jsx";
@@ -123,6 +124,11 @@ function App() {
                   <Route path="QuiSommesNous" element={
                     <PrivateRoute roles={['client']}>
                         <QuiSommesNous />
+                    </PrivateRoute>
+                }/>
+                  <Route path="AllAnnounces" element={
+                    <PrivateRoute roles={['client']}>
+                        <AllAnnounces />
                     </PrivateRoute>
                 }/>
             </Routes>

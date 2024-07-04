@@ -9,6 +9,9 @@ const Reclamations = () => {
     const [reclamations, setReclamations] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [DeleteMessage, setDeletedMessage] = useState('');
+
+
 
     useEffect(() => {
         fetchAllReclamations(currentPage);
@@ -41,6 +44,35 @@ const Reclamations = () => {
             console.error('Error fetching Reclamations:', error);
         }
     }
+
+    const deleteReclamation = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+            const response = await fetch(`http://127.0.0.1:8000/api/deleteReclamation/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            setReclamations(reclamations.filter(reclamation => reclamation.id !== id));
+            setDeletedMessage('Reclamation deleted successfully');
+
+            setTimeout(() => {
+                setDeletedMessage('');
+            }, 3000);
+            } catch (error) {
+            console.error('Error deleting reclamation:', error);
+            setDeletedMessage('Failed to delete reclamation');
+        }
+    };
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -142,6 +174,10 @@ const Reclamations = () => {
                             </div>
                             <div class="bg-white w-full h-[1px] mt-4"></div>
 
+                            <div className="flex justify-center py-5">
+                                    {DeleteMessage && <p className="text-white text-lg px-5 py-2 text-center font-bold font-serif bg-red-500 rounded-sm">{DeleteMessage}</p>}
+                                </div>
+
                                 <div className="flex flex-wrap px-16 gap-5">
 
                                 {reclamations.map((reclamation) => (
@@ -156,7 +192,14 @@ const Reclamations = () => {
                                             <p class="mt-2 text-sm text-gray-600 font-mono dark:text-gray-200">{reclamation.message}</p>
 
                                             <div class="flex justify-end mt-4">
-                                                <a class="text-lg font-medium text-yellow-600  font-serif " tabindex="0" role="link">{reclamation.user.firstName} {reclamation.user.lastName}</a>
+                                                <a class="text-lg font-medium text-yellow-600  font-serif " tabindex="0" role="link"> {reclamation.user.firstName} {reclamation.user.lastName}</a>
+                                            </div>
+                                            <div>
+                                                <button id="delete" onClick={() => deleteReclamation(reclamation.id)} className="bg-red-500 hover:bg-red-600 duration-500 px-2 py-2 rounded-full">
+                                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                    </svg>
+                                                </button>
                                             </div>
                                     </div>
                                 </div>

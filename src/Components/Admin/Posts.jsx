@@ -8,6 +8,10 @@ const Posts = () => {
     const [annonces, setAnnonces] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [message, setMessage] = useState('');
+    const [DeleteMessage, setDeletedMessage] = useState('');
+
+
 
     useEffect(() => {
         fetchAllAnnonces(currentPage);
@@ -41,6 +45,79 @@ const Posts = () => {
         }
     }
 
+    const deleteAnnonce = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+            const response = await fetch(`http://127.0.0.1:8000/api/deleteAnnonces/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            setAnnonces(annonces.filter(annonce => annonce.id !== id));
+            setDeletedMessage('Annonce deleted successfully');
+
+            setTimeout(() => {
+                setDeletedMessage('');
+            }, 3000);
+            } catch (error) {
+            console.error('Error deleting annonce:', error);
+            setMessage('Failed to delete annonce');
+        }
+    };
+
+    const acceptAnnonce = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+            const response = await fetch(`http://127.0.0.1:8000/api/acceptAnnonce/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to accept annonce');
+            }
+
+            // Update annonces state to reflect the change
+            const updatedAnnonces = annonces.map(annonce => {
+                if (annonce.id === id) {
+                    return { ...annonce, accepted_at: data.accepted_at };
+                }
+                return annonce;
+            });
+            setAnnonces(updatedAnnonces);
+
+            // Set success message
+            setMessage(data.message || 'Annonce accepted successfully');
+
+            // Clear message after 3 seconds
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
+        } catch (error) {
+            console.error('Error accepting annonce:', error);
+            // Optionally, set an error message if needed
+            setMessage(error.message || 'Failed to accept annonce');
+        }
+    };
+
+
+
     const handleNextPage = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
@@ -52,6 +129,7 @@ const Posts = () => {
             setCurrentPage(currentPage - 1);
         }
     };
+
     return (
     <div className="flex">
                <aside className="flex flex-col w-[320px] h-screen overflow-x-hidden overflow-y-auto  -r rtl:-r-0 rtl:-l  dark:bg-black">
@@ -141,6 +219,13 @@ const Posts = () => {
                             </div>
                             <div class="bg-white w-full h-[1px] mt-4"></div>
 
+
+
+                                <div className="flex justify-center py-5">
+                                    {message && <p className="text-white text-lg px-5 py-2 text-center font-bold font-serif bg-green-500 rounded-sm">{message}</p>}
+                                    {DeleteMessage && <p className="text-white text-lg px-5 py-2 text-center font-bold font-serif bg-red-500 rounded-sm">{DeleteMessage}</p>}
+                                </div>
+
                                 <div className="flex flex-wrap px-2 py-5 gap-5">
                                 {annonces.map((annonce) => (
                                    <div key={annonce.id} className="w-[25%] h-[20%]">
@@ -173,6 +258,19 @@ const Posts = () => {
                                                        <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                                    </svg>
                                                    <h1 className="px-2 text-sm">{annonce.user.id}: {annonce.user.firstName} {annonce.user.lastName}</h1>
+                                               </div>
+
+                                               <div className="flex justify-center py-5 gap-2 ">
+                                                    <button id="accepte" onClick={() => acceptAnnonce(annonce.id)} className="bg-blue-500 hover:bg-blue-600 duration-500 px-2 py-2 rounded-full">
+                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+                                                        </svg>
+                                                    </button>
+                                                    <button id="delete" onClick={() => deleteAnnonce(annonce.id)} className="bg-red-500 hover:bg-red-600 duration-500 px-2 py-2 rounded-full">
+                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                        </svg>
+                                                    </button>
                                                </div>
                                            </div>
                                        </div>

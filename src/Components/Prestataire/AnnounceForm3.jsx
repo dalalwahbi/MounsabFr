@@ -3,14 +3,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 const AnnounceForm = () => {
-
     const [images, setImages] = useState([]);
     const [formIncomplete, setFormIncomplete] = useState(false);
-    
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+    
     const handleFileChange = (event) => {
-        
-
         const fileList = event.target.files;
         const totalImages = images.length + fileList.length;
 
@@ -19,8 +17,8 @@ const AnnounceForm = () => {
             setTimeout(() => {
                 setFormIncomplete(false);
             }, 3000);
-        return;
-    }
+            return;
+        }
         
         const imageArray = Array.from(fileList).map((file) => ({
             url: URL.createObjectURL(file),
@@ -28,8 +26,6 @@ const AnnounceForm = () => {
         }));
         setImages((prevImages) => [...prevImages, ...imageArray]);
     };
-
-   
 
     const handleDelete = (index, event) => {
         event.preventDefault();
@@ -48,48 +44,52 @@ const AnnounceForm = () => {
             }, 3000);
         } else {
             setFormIncomplete(false);
-            localStorage.setItem("images", JSON.stringify(images));
-            navigate('/');
-        }
-        try {
-            const token = localStorage.getItem('token');
-            const title = localStorage.getItem('title');
-            const description = localStorage.getItem('description');
-            const location = localStorage.getItem('location');
-            const sub_category_id = localStorage.getItem('sub_category_id');
-            const sous_category_id = localStorage.getItem('sous_category_id');
-            const price = localStorage.getItem('price');
+            try {
+                const token = localStorage.getItem('token');
+                const title = localStorage.getItem('title');
+                const description = localStorage.getItem('description');
+                const location = localStorage.getItem('location');
+                const sub_category_id = localStorage.getItem('sub_category_id');
+                const sous_category_id = localStorage.getItem('sous_category_id');
+                const price = localStorage.getItem('price');
 
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('location', location);
-            formData.append('sub_category_id', sub_category_id);
-            formData.append('sous_category_id', sous_category_id);
-            formData.append('price', price);
-            images.forEach((image, index) => {
-                formData.append(`picture[${index}]`, image.file);
-            });
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('location', location);
+                formData.append('sub_category_id', sub_category_id);
+                formData.append('sous_category_id', sous_category_id);
+                formData.append('price', price);
+                images.forEach((image) => {
+                    formData.append('image[]', image.file);
+                });
+                
 
-            const response = await fetch('http://127.0.0.1:8000/api/annonce/create', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: formData,
-            });
+                const response = await fetch('http://127.0.0.1:8000/api/annonce/create', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
 
-            if (!response.ok) {
-                throw new Error('Failed to create announce');
+                if (!response.ok) {
+                    throw new Error('Failed to create announce');
+                }
+
+                const data = await response.json();
+                console.log(data);
+                setSuccessMessage('Annonce created successfully!');
+                setTimeout(() => {
+                    navigate('/Annonces'); // Redirect after showing success message
+                }, 3000);
+            } catch (error) {
+                console.error('Error creating announce:', error);
             }
-
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error('Error creating announce:', error);
         }
     };
+  
     return (
         <>
             <div className='h-[123vh] bg-gray-100'>
@@ -136,86 +136,94 @@ const AnnounceForm = () => {
                         <h1 className="text-2xl font-bold text-black capitalize ">Photos de l’annonce</h1>
                         <h4 className="text-md font-semibold capitalize text-gray-500">Ajouter des photos sur votre annonce pour un maximum de visbilité</h4>
                         <form>
-                            <div className="flex-col ml-12 justify-center gap-6 mt-4 ">
-                                <div className="flex items-center ml-9 mt-5 mb-3 justify-center w-96">
-                                    <div className="flex ml-12 items-center justify-center">
-                                        <label className="flex flex-col items-center justify-center w-[30rem] h-64 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50 -800  hover:bg-yellow-100 ">
-                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                <svg className="w-8 h-8 mb-4 text-yellow-500 dark:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                <div className="flex-col ml-12 justify-center gap-6 mt-4">
+                    <div className="flex items-center ml-9 mt-5 mb-3 justify-center w-96">
+                        <div className="flex ml-12 items-center justify-center">
+                            <label className="flex flex-col items-center justify-center w-[30rem] h-64 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50 -800 hover:bg-yellow-100">
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg className="w-8 h-8 mb-4 text-yellow-500 dark:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                                 </svg>
-                                                <p className="mb-2 text-sm text-yellow-500 dark:text-yellow-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                                <p className="text-xs text-yellow-500 dark:text-yellow-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                            </div>
-                                            <input
-                                                id="dropzone-file"
-                                                type="file"
-                                                className="hidden"
-                                                onChange={handleFileChange}
-                                                multiple  // Allow multiple file selection
-                                            />
-                                        </label>
-                                    </div>
+                                    <p className="mb-2 text-sm text-yellow-500 dark:text-yellow-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p className="text-xs text-yellow-500 dark:text-yellow-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                 </div>
-                                <div className="flex w-[31rem] mb-2 ml-6 flex-wrap gap-2">
-                                    {images.map((image, index) => (
-                                        <div key={index} className="relative">
-                                            <img src={image.url} alt={`Image ${index + 1}`} className="max-w-22  rounded-md max-h-36" />
-                                            <button
-                                                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
-                                                onClick={(event) => handleDelete(index, event)}
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-4 w-4"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                                {formIncomplete && (
-                                    <div className="fixed bottom-24 left-0 z-10 w-full flex justify-center">
-                                        <div className="bg-red-500 text-white py-2 px-4 rounded-lg">
-                                        Maximum number of photos allowed is 5.  
-                                        </div>
-                                    </div>
-                                )}
-                                <div className='bg-yellow-100 p-6 w-96 rounded-lg' style={{ width: '500px', height: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    <div className='flex items-center'>
-                                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <g clipPath="url(#clip0_429_11086)">
-                                                <circle cx="12" cy="11.9999" r="9" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                <rect x="12" y="16" width="0.01" height="0.01" stroke="#B45309" strokeWidth="3.75" strokeLinejoin="round" />
-                                                <path d="M12 12L12 8" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            </g>
-                                            <defs>
-                                                <clipPath id="clip0_429_11086">
-                                                    <rect width="24" height="24" fill="white" />
-                                                </clipPath>
-                                            </defs>
-                                        </svg>
-                                        <p className='p-6 py-10 w-96 text-yellow-700 font-medium text-sm ml-2'>Réorganisez les photos pour modifier la couverture.</p>
-                                    </div>
-                                </div>
+                                <input
+                                    id="dropzone-file"
+                                    type="file"
+                                    className="hidden"
+                                    onChange={handleFileChange}
+                                    multiple // Allow multiple file selection
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div className="flex w-[31rem] mb-2 ml-6 flex-wrap gap-2">
+                        {images.map((image, index) => (
+                            <div key={index} className="relative">
+                                <img src={image.url} alt={`Image ${index + 1}`} className="max-w-22 rounded-md max-h-36" />
+                                <button
+                                    className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+                                    onClick={(event) => handleDelete(index, event)}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                </button>
                             </div>
-                            {formIncomplete && (
-                                    <div className="fixed bottom-24 left-0 z-10 w-full flex justify-center">
-                                        <div className="bg-red-500 text-white py-2 px-4 rounded-lg">
-                                            Veuillez remplir tous les champs obligatoires.
-                                        </div>
-                                    </div>
-                                )}
-                        </form>
+                        ))}
+                    </div>
+                    {formIncomplete && (
+                        <div className="fixed bottom-24 left-0 z-10 w-full flex justify-center">
+                            <div className="bg-red-500 text-white py-2 px-4 rounded-lg">
+                                Maximum number of photos allowed is 5.
+                            </div>
+                        </div>
+                    )}
+                    <div className='bg-yellow-100 p-6 w-96 rounded-lg' style={{ width: '500px', height: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div className='flex items-center'>
+                            <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clipPath="url(#clip0_429_11086)">
+                                    <circle cx="12" cy="11.9999" r="9" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <rect x="12" y="16" width="0.01" height="0.01" stroke="#B45309" strokeWidth="3.75" strokeLinejoin="round" />
+                                    <path d="M12 12L12 8" stroke="#B45309" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_429_11086">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <p className='p-6 py-10 w-96 text-yellow-700 font-medium text-sm ml-2'>Réorganisez les photos pour modifier la couverture.</p>
+                        </div>
+                    </div>
+                </div>
+               
+                {formIncomplete && (
+                    <div className="fixed bottom-24 left-0 z-10 w-full flex justify-center">
+                        <div className="bg-red-500 text-white py-2 px-4 rounded-lg">
+                            Veuillez remplir tous les champs obligatoires.
+                        </div>
+                    </div>
+                )}
+                {successMessage && (
+                <div className="fixed bottom-24 left-0 z-10 w-full flex justify-center">
+                    <div className="bg-green-500 text-white py-2 px-4 rounded-lg">
+                        {successMessage}
+                    </div>
+                </div>
+            )}
+            </form>
                     </section>
                     <section className="w-[28rem] p-6  bg-white rounded-xl shadow-md  mt-20">
                         <div className='flex gap-2 justify-start items-center mb-3'>
