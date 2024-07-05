@@ -25,6 +25,7 @@ import Reclamations from './Components/Admin/Reclamations.jsx';
 import AnnounceForm from "./Components/Prestataire/AnnounceForm.jsx";
 import AnnounceForm2 from "./Components/Prestataire/AnnounceForm2.jsx";
 import AnnounceForm3 from "./Components/Prestataire/AnnounceForm3.jsx";
+import AnnouncesDetails from './Components/AnnouncesDetails.jsx';
 
 function App() {
     return (
@@ -129,6 +130,12 @@ function App() {
                   <Route path="AllAnnounces" element={
                     <PrivateRoute roles={['client']}>
                         <AllAnnounces />
+                    </PrivateRoute>
+                }/>
+
+                  <Route path="/AnnouncesDetails/:id" element={
+                    <PrivateRoute roles={['client']}>
+                        <AnnouncesDetails />
                     </PrivateRoute>
                 }/>
             </Routes>
