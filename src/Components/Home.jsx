@@ -9,11 +9,6 @@ import conference from "../assets/icons8-conference-48.png";
 import register from "../assets/inscription.png";
 import annonce from "../assets/annonces.png";
 import cup from "../assets/cup.png";
-import makeupImg2 from "../assets/makeupimg2.jpg";
-import makeupimg3 from "../assets/makeupimg3.jpg";
-import makeupimg4 from "../assets/makeupimg4.jpg";
-import makeupimg5 from "../assets/makeupimg5.jpg";
-import makeupImg from "../assets/makeupimg.jpg";
 import Footer from "/src/Components/Footer.jsx";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -154,12 +149,25 @@ const Home = () => {
             <nav>
                 <NavBar/>
             </nav>
-            <div style={{
-                backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                height: '90vh'
-            }}>
+        
+            <img src={backgroundImage} style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            height: '100vh',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            zIndex: -1}} />
+
+
+                    <div style={{
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            height: '90vh',
+
+        }}>
                 <div className="w-[55%] mx-auto">
                     <div className="py-[140px]">
                         <div>

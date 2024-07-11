@@ -26,10 +26,14 @@ import AnnounceForm from "./Components/Prestataire/AnnounceForm.jsx";
 import AnnounceForm2 from "./Components/Prestataire/AnnounceForm2.jsx";
 import AnnounceForm3 from "./Components/Prestataire/AnnounceForm3.jsx";
 import AnnouncesDetails from './Components/AnnouncesDetails.jsx';
+import FilterAnnounces from "./Components/FilterAnnounces.jsx";
+import { AnnonceProvider } from './Components/AnnonceContext';
 
 function App() {
     return (
-            <div>
+                 <AnnonceProvider>
+
+
                  <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="Login" element={<Login />} />
@@ -138,8 +142,16 @@ function App() {
                         <AnnouncesDetails />
                     </PrivateRoute>
                 }/>
+                <Route path="FiltredAnnounces" element={
+                    <PrivateRoute roles={['client']}>
+                        <FilterAnnounces />
+                    </PrivateRoute>
+                }/>
             </Routes>
-            </div>
+
+            </AnnonceProvider>
+
+
     );
 }
 
