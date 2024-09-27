@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAnnonces } from './AnnonceContext';
+import { useNavigate } from 'react-router-dom';
 
 const FilterAnnounces = () => {
+
     const { annonces } = useAnnonces();
     const [currentSlides, setCurrentSlides] = useState([]);
+    
+    const navigate = useNavigate();
+
+
+    
+    const handleDetailsClick = (id) => {
+        navigate(`/AnnouncesDetails/${id}`);
+    };
 
     useEffect(() => {
         if (annonces.length > 0) {
@@ -112,7 +122,32 @@ const FilterAnnounces = () => {
                                                     <p className="text-gray-500 font-serif font-medium">{annonce.annonce.sub_category_name}</p>
                                                 </div>
                                                 <p className="text-gray-500 font-serif inline-flex mr-2 font-bold">{annonce.annonce.price}</p><span className='text-gray-500 font-serif font-bold'>MAD</span>
-                                            </div>
+                                                <div className="flex justify-between items-center">
+                                    <div className=" py-4 flex justify-center items-center gap-2">
+                                        <div id="details" onClick={() => handleDetailsClick(annonce.annonce.id)} className="border-gray-400 border px-1 py-1 rounded-full  hover:border-yellow-500 duration-500">
+                                            <svg
+                                                className="w-5 h-5 text-gray-900 hover:text-yellow-500 duration-300"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-width="2"
+                                                    d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
+                                                <path stroke="currentColor" stroke-width="2"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                            </svg>
+                                        </div>
+                                    
+                                        <div id="favorits"  onClick={() => handleFavoritsClick(annonce.id, annonce.isFavorited)} className="border-gray-400 border px-1 py-1 rounded-full hover:text-yellow-500 hover:border-yellow-500">
+                                            <svg
+                                                className="w-5 h-5 text-gray-900 hover:text-yellow-500 duration-300"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div></div>
                                         </div>
                                     </div>
                                 </div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import logo from '/src/assets/logo.png';
 import { useAnnonces } from './AnnonceContext.jsx';
 import FilterAnnounces from './FilterAnnounces.jsx';
+
 const NavBar = () => {
     const { filterAnnonces } = useAnnonces();
     const [category, setCategory] = useState('');
@@ -15,7 +16,7 @@ const NavBar = () => {
         setSubCategory('');
         setSousCategory('');
         await filterAnnonces(selectedCategory, '', '');
-    };  
+    };
 
     const handleSubCategoryChange = async (selectedSubCategory) => {
         setSubCategory(selectedSubCategory);
@@ -212,7 +213,7 @@ const NavBar = () => {
             </header>
             <div>
             <FilterAnnounces category={category} subCategory={subCategory} sousCategory={sousCategory} />
-            </div>
+       </div>
             </div>
     );
 };

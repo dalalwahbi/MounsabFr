@@ -353,13 +353,13 @@ const Home = () => {
                         <div className="cursor-pointer duration-700 w-[330px]">
                             {/* Log the image path */}
                             {console.log(annonce.images[currentSlides[index]])}
-                            <img className="w-[330px] h-[240px]" src={`http://127.0.0.1:8000/${annonce.images[currentSlides[index]]}`} alt={`Image ${currentSlides[index]}`} />
+                            <img className="w-[330px] h-[240px]"  src={`http://127.0.0.1:8000/${annonce.images[currentSlides[index]]}`} alt={`Image ${currentSlides[index]}`} />
                         </div>
                         <button
                             className="absolute inset-y-0 left-0 flex items-center mt-[-190px] px-4  text-white "
                             onClick={() => goToPreviousSlide(index)}
                         >
-                            <svg class="w-8 h-8 text-white rounded-full  bg-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-8 h-8 text-white rounded-full  bg-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/>
                             </svg>
 
@@ -368,7 +368,7 @@ const Home = () => {
                             className="absolute inset-y-0 right-0 flex items-center mt-[-190px] px-4   text-white "
                             onClick={() => goToNextSlide(index)}
                         >
-                            <svg class="w-8 h-8 text-white rounded-full  bg-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-8 h-8 text-white rounded-full  bg-yellow-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
                             </svg>
 
@@ -648,7 +648,6 @@ const Home = () => {
             </div>
 
             <div style={{
-                backgroundImage: `url(${backgroundImage})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 height: '50vh'

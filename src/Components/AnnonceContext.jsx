@@ -1,12 +1,12 @@
 import { createContext, useState, useContext } from 'react';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const AnnonceContext = createContext();
 
 export const AnnonceProvider = ({ children }) => {
     const [annonces, setAnnonces] = useState([]);
 
-    const filterAnnonces = async(category, subCategory, sousCategory) => {
+    const filterAnnonces = async (category, subCategory, sousCategory) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -48,14 +48,15 @@ export const AnnonceProvider = ({ children }) => {
         }
     };
 
-    return ( <AnnonceContext.Provider value = {{ annonces, filterAnnonces } }> 
-             { children }
-             </AnnonceContext.Provider>
+    return (
+        <AnnonceContext.Provider value={{ annonces, filterAnnonces }}>
+            {children}
+        </AnnonceContext.Provider>
     );
 };
 
 AnnonceProvider.propTypes = {
-    children: PropTypes.node.isRequired, // Require children prop and must be a node
+    children: PropTypes.node.isRequired,
 };
 
 export const useAnnonces = () => {

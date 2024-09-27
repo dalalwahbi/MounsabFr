@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import logo from '/src/assets//logo.png'
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -42,7 +42,7 @@ const Clients = () => {
 
 
     return (
-        <div class="flex">
+        <div className="flex">
         <aside className="flex flex-col w-[320px] h-screen overflow-x-hidden overflow-y-auto  -r rtl:-r-0 rtl:-l  dark:bg-black">
                             <a href="#" className="mx-auto">
                                 <img className="w-32 h-28 py-2" src={logo} alt="" />
@@ -117,49 +117,47 @@ const Clients = () => {
                         </aside>
                         <div className="bg-white h-screen w-[1px]"></div>
         
-            <section class="p-5 bg-black w-full">
-                    <div class="flex gap-2 text-center items-center">
-                        <svg class="w-9 h-9 text-orange-500 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <div class="flex text-center items-center mt-2 gap-2">
-                            <h1 class="text-3xl text-white font-bold font-mono">Clients</h1>
-                            <h1 class="text-sm text-gray-300 mt-2">135</h1>
-                        </div>
-        
-                </div>
-                <div class="bg-white w-full h-[1px] mt-4"></div>
-        
-                <table class="w-full">
-                    <thead class="text-white text-sm">
-                        <th>ID</th>
-                        <th>FULL NAME</th>
-                        <th>ADRESS EMAIL</th>
-                        <th>PHONE</th>
-                        <th>CREATED DATE</th>
-                        <th class="py-6">ACTION</th>
-                    </thead>
-                    <tbody class="text-white text-md text-center">
-                    {clients.map((client) => (
-                            <tr className="text-white" key={client.id}>
-                                <td className="text-white font-medium font-serif">{client.id}</td>
-                                <td className="text-white font-medium font-serif">{client.user.firstName} {client.user.lastName}</td>
-                                <td className="text-white font-medium font-serif">{client.user.email}</td>
-                                <td className="text-white font-medium font-serif">{client.user.phone}</td>
-                                <td className="text-white font-medium font-serif">{format(new Date(client.user.created_at), 'dd MMMM yyyy')}</td>
-                                <td>
-                                    <button className="text-white bg-red-600 font-medium font-serif px-5 py-1 rounded">BAN</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-        
-        
-        
-                </table>
-        
-            </section>
+                        <section className="p-5 bg-black w-full">
+  <div className="flex gap-2 text-center items-center">
+    <svg className="w-9 h-9 text-orange-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+    <div className="flex text-center items-center mt-2 gap-2">
+      <h1 className="text-3xl text-white font-bold font-mono">Clients</h1>
+      <h1 className="text-sm text-gray-300 mt-2">135</h1>
+    </div>
+  </div>
+  <div className="bg-white w-full h-[1px] mt-4"></div>
+
+  <table className="w-full">
+    <thead className="text-white text-sm">
+      <tr>
+        <th>ID</th>
+        <th>FULL NAME</th>
+        <th>ADDRESS EMAIL</th>
+        <th>PHONE</th>
+        <th>CREATED DATE</th>
+        <th className="py-6">ACTION</th>
+      </tr>
+    </thead>
+    <tbody className="text-white text-md text-center">
+      {clients.map((client) => (
+        <tr className="text-white" key={client.id}>
+          <td className="text-white font-medium font-serif">{client.id}</td>
+          <td className="text-white font-medium font-serif">{client.user.firstName} {client.user.lastName}</td>
+          <td className="text-white font-medium font-serif">{client.user.email}</td>
+          <td className="text-white font-medium font-serif">{client.user.phone}</td>
+          <td className="text-white font-medium font-serif">{format(new Date(client.user.created_at), 'dd MMMM yyyy')}</td>
+          <td>
+            <button className="text-white bg-red-600 font-medium font-serif px-5 py-1 rounded">BAN</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>
+
         </div>
         
     );
